@@ -257,8 +257,11 @@ void PostOnSend(CONNID dwConnID, const BYTE* pData, int iLength, LPCTSTR lpszNam
 
 void PostOnReceive(CONNID dwConnID, const BYTE* pData, int iLength, LPCTSTR lpszName)
 {
-	LPTSTR lpszContent = new TCHAR[20];
-	wsprintf(lpszContent, _T("(%d bytes)"), iLength);
+	USES_CONVERSION;
+	LPTSTR lpszContent = new TCHAR[MAX_PATH];
+	char szContent[MAX_PATH] = { 0 };
+	strncpy_s(szContent, (char*)pData, iLength);
+	wsprintf(lpszContent, _T("(%d bytes, content: %s)"), iLength, A2T(szContent));
 	int content_len = lstrlen(lpszContent);
 	info_msg* msg = info_msg::Construct(dwConnID, EVT_ON_RECEIVE, content_len, lpszContent, lpszName);
 
