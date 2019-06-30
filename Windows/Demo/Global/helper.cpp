@@ -307,6 +307,7 @@ void PostOnReceive(CONNID dwConnID, const BYTE* pData, int iLength, LPCTSTR lpsz
 	char szContent[MAX_PATH] = { 0 };
 	strncpy_s(szContent, (char*)pData, iLength);
 	wsprintf(lpszContent, _T("(%d bytes, content: %s)"), iLength, A2T(szContent));
+<<<<<<< HEAD
 	int content_len = lstrlen(lpszContent);
 	info_msg* msg = info_msg::Construct(dwConnID, EVT_ON_RECEIVE, content_len, lpszContent, lpszName);
 
@@ -317,6 +318,8 @@ void PostOnReceiveFrom(CONNID dwConnID, LPCTSTR lpszAddress, USHORT usPort, cons
 {
 	LPTSTR lpszContent = new TCHAR[100];
 	wsprintf(lpszContent, _T("<%s#%d> (%d bytes)"), lpszAddress, usPort, iLength);
+=======
+>>>>>>> 32c339c4... update
 	int content_len = lstrlen(lpszContent);
 	info_msg* msg = info_msg::Construct(dwConnID, EVT_ON_RECEIVE, content_len, lpszContent, lpszName);
 
