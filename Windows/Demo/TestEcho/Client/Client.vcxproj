@@ -101,12 +101,18 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\..\protobuf\src;..\..\pb\gen\cpp</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>libprotobufd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\libs</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -215,6 +221,7 @@
     <ClInclude Include="..\..\..\Common\Src\WaitFor.h" />
     <ClInclude Include="..\..\..\Common\Src\Win32Helper.h" />
     <ClInclude Include="..\..\Global\helper.h" />
+    <ClInclude Include="..\..\pb\gen\cpp\AddressBook.pb.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -228,6 +235,9 @@
     <ClCompile Include="..\..\..\Common\Src\SysHelper.cpp" />
     <ClCompile Include="..\..\..\Common\Src\WaitFor.cpp" />
     <ClCompile Include="..\..\Global\helper.cpp" />
+    <ClCompile Include="..\..\pb\gen\cpp\AddressBook.pb.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientDlg.cpp" />
     <ClCompile Include="stdafx.cpp">

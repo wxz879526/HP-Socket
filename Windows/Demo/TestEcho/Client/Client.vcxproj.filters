@@ -22,6 +22,9 @@
     <Filter Include="HPSocket">
       <UniqueIdentifier>{384036c9-f332-4983-9783-c5f08964d609}</UniqueIdentifier>
     </Filter>
+    <Filter Include="pb">
+      <UniqueIdentifier>{5cbf8327-2a8c-4d26-893c-a5ecd56f558c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -99,6 +102,9 @@
     <ClInclude Include="..\..\..\Src\HPTypeDef.h">
       <Filter>HPSocket</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\pb\gen\cpp\AddressBook.pb.h">
+      <Filter>pb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -130,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Src\TcpClient.cpp">
       <Filter>HPSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\pb\gen\cpp\AddressBook.pb.cc">
+      <Filter>pb</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
