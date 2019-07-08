@@ -7,6 +7,9 @@
 #include "ClientDlg.h"
 #include "afxdialogex.h"
 
+#include "AddressBook.pb.h"
+#include <fstream>
+
 
 // CClientDlg dialog
 
@@ -69,6 +72,24 @@ BOOL CClientDlg::OnInitDialog()
 	SetAppState(ST_STOPPED);
 
 	m_bAsyncConn = FALSE;
+
+	tutorial::Person personItem;
+	personItem.set_id(1000);
+	personItem.set_name("wenxinzhou");
+	auto pPhone = personItem.add_phones();
+	pPhone->set_type(tutorial::Person_PhoneType_MOBILE);
+	pPhone->set_number("148");
+	
+	std::fstream f("1.txt", ios::out | ios::trunc | ios::binary);
+	auto b = personItem.SerializeToOstream(&f);
+	f.close();
+
+	std::fstream f2("1.txt", ios::in | ios::binary);
+	tutorial::Person pe;
+	pe.ParseFromIstream(&f2);
+	int x = 0;
+
+	
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
