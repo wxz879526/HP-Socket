@@ -119,14 +119,14 @@ namespace HPSocketCS
 
         public bool SendMessage(IntPtr connId, WSMessageState state, IntPtr pData, int length)
         {
-            return HttpSdk.HP_HttpServer_SendWSMessage(pServer, connId, state.Final, state.Reserved, state.OperationCode, state.Mask, pData, length, 0);
+            return HttpSdk.HP_HttpServer_SendWSMessage(pServer, connId, state.Final, state.Reserved, state.OperationCode, pData, length, 0);
         }
 
         public bool SendWSMessage(IntPtr connId, WSMessageState state, byte[] data)
         {
             state.Mask = null;
             int bodyLen = data == null ? 0 : data.Length;
-            return HttpSdk.HP_HttpServer_SendWSMessage(pServer, connId, state.Final, state.Reserved, state.OperationCode, state.Mask, data, bodyLen, 0);
+            return HttpSdk.HP_HttpServer_SendWSMessage(pServer, connId, state.Final, state.Reserved, state.OperationCode, data, bodyLen, 0);
         }
 
         public WSMessageState GetWSMessageState(IntPtr connId)

@@ -142,11 +142,11 @@
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
-      <CppAdditionalWarning>no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
+      <CppAdditionalWarning>no-class-memaccess;no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
       <CppLanguageStandard>c++1y</CppLanguageStandard>
       <SymbolsHiddenByDefault>true</SymbolsHiddenByDefault>
       <AdditionalIncludeDirectories>../../../include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ZLIB_DISABLED</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_HP_LIB;_ZLIB_DISABLED;</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <LibraryDependencies>:libhpsocket_d.a;rt;pthread;dl</LibraryDependencies>
@@ -155,12 +155,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
-      <CppAdditionalWarning>no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
+      <CppAdditionalWarning>no-class-memaccess;no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
       <CppLanguageStandard>c++1y</CppLanguageStandard>
       <DebugInformationFormat>None</DebugInformationFormat>
       <SymbolsHiddenByDefault>true</SymbolsHiddenByDefault>
       <AdditionalIncludeDirectories>../../../include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ZLIB_DISABLED;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_HP_LIB;_ZLIB_DISABLED;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <LibraryDependencies>:libhpsocket.a;rt;pthread;dl</LibraryDependencies>
@@ -169,11 +169,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <CppAdditionalWarning>no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
+      <CppAdditionalWarning>no-class-memaccess;no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
       <CppLanguageStandard>c++1y</CppLanguageStandard>
       <SymbolsHiddenByDefault>true</SymbolsHiddenByDefault>
       <AdditionalIncludeDirectories>../../../include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ZLIB_DISABLED</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_HP_LIB;_ZLIB_DISABLED;</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <LibraryDependencies>:libhpsocket_d.a;rt;pthread;dl</LibraryDependencies>
@@ -183,12 +183,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <CppAdditionalWarning>no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
+      <CppAdditionalWarning>no-class-memaccess;no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
       <CppLanguageStandard>c++1y</CppLanguageStandard>
       <DebugInformationFormat>None</DebugInformationFormat>
       <SymbolsHiddenByDefault>true</SymbolsHiddenByDefault>
       <AdditionalIncludeDirectories>../../../include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ZLIB_DISABLED;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_HP_LIB;_ZLIB_DISABLED;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <LibraryDependencies>:libhpsocket.a;rt;pthread;dl</LibraryDependencies>
@@ -198,11 +198,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <ClCompile>
-      <CppAdditionalWarning>no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
+      <CppAdditionalWarning>no-class-memaccess;no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
       <CppLanguageStandard>c++1y</CppLanguageStandard>
       <SymbolsHiddenByDefault>true</SymbolsHiddenByDefault>
       <AdditionalIncludeDirectories>../../../include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ZLIB_DISABLED</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_HP_LIB;_ZLIB_DISABLED;</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <LibraryDependencies>:libhpsocket_d.a;rt;pthread;dl</LibraryDependencies>
@@ -212,12 +212,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <ClCompile>
-      <CppAdditionalWarning>no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
+      <CppAdditionalWarning>no-class-memaccess;no-reorder;switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
       <CppLanguageStandard>c++1y</CppLanguageStandard>
       <DebugInformationFormat>None</DebugInformationFormat>
       <SymbolsHiddenByDefault>true</SymbolsHiddenByDefault>
       <AdditionalIncludeDirectories>../../../include;$(StlIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ZLIB_DISABLED;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USE_HP_LIB;_ZLIB_DISABLED;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <LibraryDependencies>:libhpsocket.a;rt;pthread;dl</LibraryDependencies>

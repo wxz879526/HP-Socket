@@ -628,6 +628,21 @@ namespace HPSocketCS
         public static extern bool HP_HttpServer_SendLocalFile(IntPtr pServer, IntPtr dwConnID, string lpszFileName, ushort usStatusCode, string lpszDesc, THeader[] lpHeaders, int iHeaderCount);
 
         /*
+        * 名称：发送 Chunked 数据分片
+        * 描述：向对端发送 Chunked 数据分片
+        *		
+        * 参数：		dwConnID		-- 连接 ID
+        *			pData			-- Chunked 数据分片
+        *			iLength			-- 数据分片长度（为 0 表示结束分片）
+        *			lpszExtensions	-- 扩展属性（默认：nullptr）
+        * 返回值：	TRUE			-- 成功
+        *			FALSE			-- 失败
+        */
+        [DllImport(Sdk.HPSOCKET_DLL_PATH, CharSet = CharSet.Ansi, SetLastError = true)]
+        public static extern bool HP_HttpServer_SendChunkData(IntPtr pServer, IntPtr dwConnID, byte[] pData /*= nullptr*/, int iLength /*= 0*/, string lpszExtensions /*= nullptr*/);
+
+
+        /*
         * 名称：发送 WebSocket 消息
         * 描述：向对端端发送 WebSocket 消息
         *		
@@ -647,9 +662,9 @@ namespace HPSocketCS
         *			FALSE			-- 失败
         */
         [DllImport(Sdk.HPSOCKET_DLL_PATH, CharSet = CharSet.Ansi, SetLastError = true)]
-        public static extern bool HP_HttpServer_SendWSMessage(IntPtr pServer, IntPtr dwConnID, bool bFinal, WSReserved iReserved, WSOpcode iOperationCode, byte[] lpszMask, IntPtr pData, int iLength, ulong ullBodyLen);
+        public static extern bool HP_HttpServer_SendWSMessage(IntPtr pServer, IntPtr dwConnID, bool bFinal, WSReserved iReserved, WSOpcode iOperationCode, IntPtr pData, int iLength, ulong ullBodyLen);
         [DllImport(Sdk.HPSOCKET_DLL_PATH, CharSet = CharSet.Ansi, SetLastError = true)]
-        public static extern bool HP_HttpServer_SendWSMessage(IntPtr pServer, IntPtr dwConnID, bool bFinal, WSReserved iReserved, WSOpcode iOperationCode, byte[] lpszMask, byte[] pdata, int iLength, ulong ullBodyLen);
+        public static extern bool HP_HttpServer_SendWSMessage(IntPtr pServer, IntPtr dwConnID, bool bFinal, WSReserved iReserved, WSOpcode iOperationCode, byte[] pdata, int iLength, ulong ullBodyLen);
 
 
         /*
@@ -796,6 +811,22 @@ namespace HPSocketCS
         */
         [DllImport(Sdk.HPSOCKET_DLL_PATH, CharSet = CharSet.Ansi, SetLastError = true)]
         public static extern bool HP_HttpAgent_SendLocalFile(IntPtr pAgent, IntPtr dwConnID, string lpszFileName, string lpszMethod, string lpszPath, THeader[] lpHeaders, int iHeaderCount);
+
+
+        /*
+        * 名称：发送 Chunked 数据分片
+        * 描述：向对端发送 Chunked 数据分片
+        *		
+        * 参数：		dwConnID		-- 连接 ID
+        *			pData			-- Chunked 数据分片
+        *			iLength			-- 数据分片长度（为 0 表示结束分片）
+        *			lpszExtensions	-- 扩展属性（默认：nullptr）
+        * 返回值：	TRUE			-- 成功
+        *			FALSE			-- 失败
+        */
+        [DllImport(Sdk.HPSOCKET_DLL_PATH, CharSet = CharSet.Ansi, SetLastError = true)]
+        public static extern bool HP_HttpAgent_SendChunkData(IntPtr pAgent, IntPtr dwConnID, byte[] pData /*= nullptr*/, int iLength /*= 0*/, string lpszExtensions /*= nullptr*/);
+
 
         /* 发送 POST 请求 */
         [DllImport(Sdk.HPSOCKET_DLL_PATH, CharSet = CharSet.Ansi, SetLastError = true)]
@@ -973,6 +1004,20 @@ namespace HPSocketCS
         */
         [DllImport(Sdk.HPSOCKET_DLL_PATH, CharSet = CharSet.Ansi, SetLastError = true)]
         public static extern bool HP_HttpClient_SendLocalFile(IntPtr pClient, string lpszFileName, string lpszMethod, string lpszPath, THeader[] lpHeaders, int iHeaderCount);
+
+        /*
+        * 名称：发送 Chunked 数据分片
+        * 描述：向对端发送 Chunked 数据分片
+        *		
+        * 参数：		pData			-- Chunked 数据分片
+        *			iLength			-- 数据分片长度（为 0 表示结束分片）
+        *			lpszExtensions	-- 扩展属性（默认：nullptr）
+        * 返回值：	TRUE			-- 成功
+        *			FALSE			-- 失败
+        */
+        [DllImport(Sdk.HPSOCKET_DLL_PATH, CharSet = CharSet.Ansi, SetLastError = true)]
+        public static extern bool HP_HttpClient_SendChunkData(IntPtr pClient, byte[] pData /*= nullptr*/, int iLength /*= 0*/, string lpszExtensions /*= nullptr*/);
+
 
         /* 发送 POST 请求 */
         [DllImport(Sdk.HPSOCKET_DLL_PATH, CharSet = CharSet.Ansi, SetLastError = true)]

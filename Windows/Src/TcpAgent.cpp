@@ -130,7 +130,7 @@ BOOL CTcpAgent::CheckParams()
 {
 	if	((m_enSendPolicy >= SP_PACK && m_enSendPolicy <= SP_DIRECT)								&&
 		(m_enOnSendSyncPolicy >= OSSP_NONE && m_enOnSendSyncPolicy <= OSSP_RECEIVE)				&&
-		((int)m_dwMaxConnectionCount > 0)														&&
+		((int)m_dwMaxConnectionCount > 0 && m_dwMaxConnectionCount <= MAX_CONNECTION_COUNT)		&&
 		((int)m_dwWorkerThreadCount > 0 && m_dwWorkerThreadCount <= MAX_WORKER_THREAD_COUNT)	&&
 		((int)m_dwSocketBufferSize >= MIN_SOCKET_BUFFER_SIZE)									&&
 		((int)m_dwFreeSocketObjLockTime >= 1000)												&&
@@ -379,13 +379,7 @@ void CTcpAgent::AddClientSocketObj(CONNID dwConnID, TSocketObj* pSocketObj, cons
 
 void CTcpAgent::ReleaseFreeSocket()
 {
-	TSocketObj* pSocketObj = nullptr;
-
-	while(m_lsFreeSocket.TryGet(&pSocketObj))
-		DeleteSocketObj(pSocketObj);
-
-	ENSURE(m_lsFreeSocket.IsEmpty());
-	m_lsFreeSocket.Reset();
+	m_lsFreeSocket.Clear();
 
 	ReleaseGCSocketObj(TRUE);
 	ENSURE(m_lsGCSocket.IsEmpty());

@@ -84,6 +84,16 @@ procedure Destroy_HP_SSLPackClient(pClient: HP_SSLPackClient); stdcall; external
 //***************************************************************************************/
 //************************************ SSL 初始化方法 ************************************/
 
+{/*
+* 名称：SNI 默认回调函数
+* 描述：HP_SSLServer_SetupSSLContext 方法中如果不指定 SNI 回调函数则使用此 SNI 默认回调函数
+*
+* 参数：		lpszServerName	-- 请求域名
+*		       	pContext		    -- SSL Context 对象
+*
+* 返回值：SNI 主机证书对应的索引
+*/}
+function HP_SSL_DefaultServerNameCallback(lpszServerName: PChar; pContext: PVOID): Integer; stdcall; external HPSocketDLL;
 {
 * 名称：清理线程局部环境 SSL 资源
 * 描述：任何一个操作 SSL 的线程，通信结束时都需要清理线程局部环境 SSL 资源
@@ -119,6 +129,40 @@ function HP_SSLServer_SetupSSLContext(pServer: HP_SSLServer; iVerifyMode: intege
   ): Bool; stdcall; external HPSocketDLL;
 
 {/*
+* 名称：初始化通信组件 SSL 环境参数（通过内存加载证书）
+* 描述：SSL 环境参数必须在 SSL 通信组件启动前完成初始化，否则启动失败
+*
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+*			      lpszPemCert				-- 证书内容
+*			      lpszPemKey				-- 私钥内容
+*		        lpszKeyPasswod			-- 私钥密码（没有密码则为空）
+*			      lpszCAPemCert			-- CA 证书内容（单向验证或客户端可选）
+*			      fnServerNameCallback	-- SNI 回调函数指针（可选，如果为 nullptr 则使用 SNI 默认回调函数）
+*
+* 返回值：	TRUE	-- 成功
+*			      FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
+*/}
+function HP_SSLServer_SetupSSLContextByMemory(pServer: HP_SSLServer; iVerifyMode: integer = Integer(SSL_VM_NONE) ; //* SSL_VM_NONE */
+    lpszPemCert: PChar=nil;             //* nullptr */
+    lpszPemKey: PChar=nil;              //* nullptr */
+    lpszKeyPasswod: PChar=nil;          //* nullptr */
+    lpszCAPemCert: PChar=nil;           //* nullptr */
+    fnServerNameCallback: HP_Fn_SNI_ServerNameCallback = nil  //* nullptr */
+  ): Bool; stdcall; external HPSocketDLL;
+
+{/*
+* 名称：绑定 SNI 主机域名
+* 描述：SSL 服务端在 AddSSLContext() 成功后可以调用本方法绑定主机域名到 SNI 主机证书
+*
+* 参数：		lpszServerName		-- 主机域名
+*			      iContextIndex		  -- SNI 主机证书对应的索引
+*
+* 返回值：	TRUE	-- 成功
+*			      FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
+*/}
+function HP_SSLServer_BindSSLServerName(pServer: HP_SSLServer; lpszServerName: PChar; iContextIndex: LongWord) : Bool; stdcall; external HPSocketDLL;
+
+{/*
 * 名称：增加 SNI 主机证书
 * 描述：SSL 服务端在 SetupSSLContext() 成功后可以调用本方法增加多个 SNI 主机证书
 *
@@ -137,6 +181,25 @@ function HP_SSLServer_AddSSLContext(pServer: HP_SSLServer; iVerifyMode: LongWord
         lpszCAPemCertFileOrPath: PChar //* nullptr */
   ): Integer; stdcall; external HPSocketDLL;
 
+{/*
+* 名称：增加 SNI 主机证书（通过内存加载证书）
+* 描述：SSL 服务端在 SetupSSLContext() 成功后可以调用本方法增加多个 SNI 主机证书
+*
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+*			lpszPemCert				-- 证书内容
+*			lpszPemKey				-- 私钥内容
+*			lpszKeyPasswod			-- 私钥密码（没有密码则为空）
+*			lpszCAPemCert			-- CA 证书内容（单向验证可选）
+*
+* 返回值：	正数		-- 成功，并返回 SNI 主机证书对应的索引，该索引用于在 SNI 回调函数中定位 SNI 主机
+*			负数		-- 失败，可通过 SYS_GetLastError() 获取失败原因
+*/}
+function  HP_SSLServer_AddSSLContextByMemory(pServer: HP_SSLServer; iVerifyMode: LongWord;
+        lpszPemCert: PChar;
+        lpszPemKey: PChar;
+        lpszKeyPasswod: PChar;     //* nullptr */,
+        lpszCAPemCert: PChar       //* nullptr */
+  ): Integer; stdcall; external HPSocketDLL;
 {/*
 * 名称：清理通信组件 SSL 运行环境
 * 描述：清理通信组件 SSL 运行环境，回收 SSL 相关内存
@@ -170,6 +233,25 @@ function HP_SSLAgent_SetupSSLContext(pAgent: HP_SSLAgent; iVerifyMode: LongWord;
    ): Bool; stdcall; external HPSocketDLL;
 
 {/*
+* 名称：初始化通信组件 SSL 环境参数（通过内存加载证书）
+* 描述：SSL 环境参数必须在 SSL 通信组件启动前完成初始化，否则启动失败
+*
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+*			      lpszPemCert				-- 证书内容
+*			      lpszPemKey				-- 私钥内容
+*			      lpszKeyPasswod			-- 私钥密码（没有密码则为空）
+*			      lpszCAPemCert			-- CA 证书内容（单向验证或客户端可选）
+*
+* 返回值：	TRUE	-- 成功
+*			      FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
+*/}
+function HP_SSLAgent_SetupSSLContextByMemory(pAgent: HP_SSLAgent; iVerifyMode: LongWord; //* SSL_VM_NONE */,
+      lpszPemCert: PChar;               //* nullptr */,
+      lpszPemKey: PChar;                //* nullptr */,
+      lpszKeyPasswod: PChar;            //* nullptr */,
+      lpszCAPemCert: PChar             //* nullptr */
+   ):Bool; stdcall; external HPSocketDLL;
+{/*
 * 名称：清理通信组件 SSL 运行环境
 * 描述：清理通信组件 SSL 运行环境，回收 SSL 相关内存
 *		1、通信组件析构时会自动调用本方法
@@ -194,12 +276,32 @@ procedure HP_SSLAgent_CleanupSSLContext(pAgent: HP_SSLAgent); stdcall; external 
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
 */}
-function HP_SSLClient_SetupSSLContext(pClient: HP_SSLClient;iVerifyMode: LongWord; //* SSL_VM_NONE */,
+function HP_SSLClient_SetupSSLContext(pClient: HP_SSLClient; iVerifyMode: LongWord; //* SSL_VM_NONE */,
      lpszPemCertFile: PChar;         //* nullptr */,
      lpszPemKeyFile: PChar;          //* nullptr */,
      lpszKeyPasswod: PChar;          //* nullptr */,
      lpszCAPemCertFileOrPath: PChar  //* nullptr */
   ): Bool; stdcall; external HPSocketDLL;
+
+{/*
+* 名称：初始化通信组件 SSL 环境参数（通过内存加载证书）
+* 描述：SSL 环境参数必须在 SSL 通信组件启动前完成初始化，否则启动失败
+*
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+*			      lpszPemCert				-- 证书内容
+*			      lpszPemKey				-- 私钥内容
+*			      lpszKeyPasswod			-- 私钥密码（没有密码则为空）
+*			      lpszCAPemCert			-- CA 证书内容（单向验证或客户端可选）
+*
+* 返回值：	TRUE	-- 成功
+*			      FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
+*/}
+function HP_SSLClient_SetupSSLContextByMemory(pClient: HP_SSLClient; iVerifyMode: LongWord; //* SSL_VM_NONE */,
+     lpszPemCert: PChar;              //* nullptr */,
+     lpszPemKey: PChar;               //* nullptr */,
+     lpszKeyPasswod: PChar;           //* nullptr */,
+     lpszCAPemCert: PChar             //* nullptr */
+   ): Bool; stdcall; external HPSocketDLL;
 
 {/*
 * 名称：清理通信组件 SSL 运行环境
@@ -229,7 +331,18 @@ function HP_SSLServer_StartSSLHandShake(pServer: HP_SSLServer; dwConnID: HP_CONN
 procedure HP_SSLServer_SetSSLAutoHandShake(pServer: HP_SSLServer;bAutoHandShake: BOOL); stdcall; external HPSocketDLL;
 //* 获取通信组件握手方式 */
 function HP_SSLServer_IsSSLAutoHandShake(pServer: HP_SSLServer ): BOOL; stdcall; external HPSocketDLL;
-
+{/*
+* 名称：获取 SSL Session 信息
+* 描述：获取指定类型的 SSL Session 信息（输出类型参考：En_HP_SSLSessionInfo）
+*
+* 返回值：	TRUE	-- 成功
+*			      FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
+*/}
+function HP_SSLServer_GetSSLSessionInfo(pServer: HP_SSLServer;
+     dwConnID: HP_CONNID;
+     enInfo: En_HP_SSLSessionInfo;
+     lppInfo: PLPVOID
+   ): Bool; stdcall; external HPSocketDLL;
 {/*
 * 名称：启动 SSL 握手
 * 描述：当通信组件设置为非自动握手时，需要调用本方法启动 SSL 握手
@@ -245,6 +358,18 @@ procedure HP_SSLAgent_SetSSLAutoHandShake(pAgent: HP_SSLAgent; bAutoHandShake: B
 function HP_SSLAgent_IsSSLAutoHandShake(pAgent: HP_SSLAgent ): BOOL; stdcall; external HPSocketDLL;
 
 {/*
+* 名称：获取 SSL Session 信息
+* 描述：获取指定类型的 SSL Session 信息（输出类型参考：En_HP_SSLSessionInfo）
+*
+* 返回值：	TRUE	-- 成功
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
+*/}
+function HP_SSLAgent_GetSSLSessionInfo(pAgent: HP_SSLAgent;
+     dwConnID: HP_CONNID;
+     enInfo: En_HP_SSLSessionInfo;
+     lppInfo: PLPVOID
+   ): Bool; stdcall; external HPSocketDLL;
+{/*
 * 名称：启动 SSL 握手
 * 描述：当通信组件设置为非自动握手时，需要调用本方法启动 SSL 握手
 *
@@ -258,6 +383,17 @@ procedure HP_SSLClient_SetSSLAutoHandShake(pClient: HP_SSLClient; bAutoHandShake
 //* 获取通信组件握手方式 */
 function HP_SSLClient_IsSSLAutoHandShake(pClient: HP_SSLClient): BOOL; stdcall; external HPSocketDLL;
 
+{/*
+* 名称：获取 SSL Session 信息
+* 描述：获取指定类型的 SSL Session 信息（输出类型参考：En_HP_SSLSessionInfo）
+*
+* 返回值：	TRUE	-- 成功
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
+*/}
+function HP_SSLClient_GetSSLSessionInfo(pClient: HP_SSLClient;
+     enInfo: En_HP_SSLSessionInfo;
+     lppInfo: PLPVOID
+   ): Bool; stdcall; external HPSocketDLL;
 {/*****************************************************************************************************************************************************/
 /******************************************************************** HTTPS Exports ******************************************************************/
 /*****************************************************************************************************************************************************/

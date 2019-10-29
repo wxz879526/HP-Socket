@@ -23,7 +23,7 @@ namespace HPSocketCS
         /// <summary>
         /// 私钥密码（没有密码则为空）
         /// </summary>
-        public string KeyPasswod { get; set; }
+        public string KeyPassword { get; set; }
         /// <summary>
         /// CA 证书文件或目录（单向验证或客户端可选）
         /// </summary>
@@ -38,17 +38,17 @@ namespace HPSocketCS
         /// <param name="verifyModel">验证模式</param>
         /// <param name="pemCertFile">证书文件（客户端可选）</param>
         /// <param name="pemKeyFile">私钥文件（客户端可选）</param>
-        /// <param name="keyPasswod">私钥密码（没有密码则为空）</param>
+        /// <param name="keyPassword">私钥密码（没有密码则为空）</param>
         /// <param name="caPemCertFileOrPath">CA 证书文件或目录（单向验证或客户端可选）</param>
-        public SSLClient(SSLVerifyMode verifyModel, string pemCertFile, string pemKeyFile, string keyPasswod, string caPemCertFileOrPath)
+        public SSLClient(SSLVerifyMode verifyModel, string pemCertFile, string pemKeyFile, string keyPassword, string caPemCertFileOrPath)
         {
             this.VerifyMode = verifyModel;
             this.PemCertFile = pemCertFile;
             this.PemKeyFile = pemKeyFile;
-            this.KeyPasswod = keyPasswod;
+            this.KeyPassword = keyPassword;
             this.CAPemCertFileOrPath = caPemCertFileOrPath;
         }
-        
+
 
         protected override bool CreateListener()
         {
@@ -76,20 +76,22 @@ namespace HPSocketCS
 
         /// <summary>
         /// 初始化SSL环境
+        /// <param name="memory">是否通过内存加载证书</param>
         /// </summary>
         /// <returns></returns>
-        public virtual bool Initialize()
+        public virtual bool Initialize(bool memory = false)
         {
             if (pClient != IntPtr.Zero)
             {
 
                 PemCertFile = string.IsNullOrWhiteSpace(PemCertFile) ? null : PemCertFile;
                 PemKeyFile = string.IsNullOrWhiteSpace(PemKeyFile) ? null : PemKeyFile;
-                KeyPasswod = string.IsNullOrWhiteSpace(KeyPasswod) ? null : KeyPasswod;
+                KeyPassword = string.IsNullOrWhiteSpace(KeyPassword) ? null : KeyPassword;
                 CAPemCertFileOrPath = string.IsNullOrWhiteSpace(CAPemCertFileOrPath) ? null : CAPemCertFileOrPath;
 
-
-                return SSLSdk.HP_SSLClient_SetupSSLContext(pClient, VerifyMode, PemCertFile, PemKeyFile, KeyPasswod, CAPemCertFileOrPath);
+                return memory
+                    ? SSLSdk.HP_SSLClient_SetupSSLContextByMemory(pClient, VerifyMode, PemCertFile, PemKeyFile, KeyPassword, CAPemCertFileOrPath)
+                    : SSLSdk.HP_SSLClient_SetupSSLContext(pClient, VerifyMode, PemCertFile, PemKeyFile, KeyPassword, CAPemCertFileOrPath);
             }
 
             return false;
@@ -99,14 +101,14 @@ namespace HPSocketCS
         /// <summary>
         /// 反初始化SSL环境
         /// </summary>
-        public virtual void Uninitialize()
+        public virtual void UnInitialize()
         {
             if (pClient != IntPtr.Zero)
             {
                 SSLSdk.HP_SSLClient_CleanupSSLContext(pClient);
             }
         }
-        
+
         public override void Destroy()
         {
             Stop();
@@ -129,7 +131,6 @@ namespace HPSocketCS
         /// 启动 SSL 握手
         /// 当通信组件设置为非自动握手时，需要调用本方法启动 SSL 握手
         /// </summary>
-        /// <param name="connId"></param>
         /// <returns></returns>
         public bool StartSSLHandShake()
         {
@@ -149,6 +150,18 @@ namespace HPSocketCS
             {
                 SSLSdk.HP_SSLClient_SetSSLAutoHandShake(pClient, value);
             }
+        }
+
+        /// <summary>
+        /// 获取指定类型的 SSL Session 信息（输出类型参考：SSLSessionInfo）
+        /// </summary>
+        /// <param name="info">指定获取内容的类型</param>
+        /// <returns></returns>
+        public IntPtr GetSSLSessionInfo(SSLSessionInfo info)
+        {
+            var ret = IntPtr.Zero;
+            SSLSdk.HP_SSLClient_GetSSLSessionInfo(pClient, info, ref ret);
+            return ret;
         }
     }
 }

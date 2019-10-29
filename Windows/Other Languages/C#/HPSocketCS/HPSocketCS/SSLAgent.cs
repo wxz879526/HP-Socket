@@ -30,12 +30,12 @@ namespace HPSocketCS
         /// <summary>
         /// 私钥密码（没有密码则为空）
         /// </summary>
-        public string KeyPasswod { get; set; }
+        public string KeyPassword { get; set; }
         /// <summary>
         /// CA 证书文件或目录（单向验证或客户端可选）
         /// </summary>
         public string CAPemCertFileOrPath { get; set; }
-        
+
         public SSLAgent()
         {
             Interlocked.Increment(ref ObjectReferer);
@@ -47,15 +47,15 @@ namespace HPSocketCS
         /// <param name="_verifyModel">验证模式</param>
         /// <param name="_pemCertFile">证书文件</param>
         /// <param name="_pemKeyFile">私钥文件</param>
-        /// <param name="_keyPasswod">私钥密码（没有密码则为空）</param>
+        /// <param name="_keyPassword">私钥密码（没有密码则为空）</param>
         /// <param name="_caPemCertFileOrPath">CA 证书文件或目录（单向验证或客户端可选）</param>
-        public SSLAgent(SSLVerifyMode _verifyModel, string _pemCertFile, string _pemKeyFile, string _keyPasswod, string _caPemCertFileOrPath)
+        public SSLAgent(SSLVerifyMode _verifyModel, string _pemCertFile, string _pemKeyFile, string _keyPassword, string _caPemCertFileOrPath)
         {
             Interlocked.Increment(ref ObjectReferer);
             this.VerifyMode = _verifyModel;
             this.PemCertFile = _pemCertFile;
             this.PemKeyFile = _pemKeyFile;
-            this.KeyPasswod = _keyPasswod;
+            this.KeyPassword = _keyPassword;
             this.CAPemCertFileOrPath = _caPemCertFileOrPath;
             //Initialize();
         }
@@ -92,8 +92,9 @@ namespace HPSocketCS
         /// <summary>
         /// 初始化SSL环境
         /// </summary>
+        /// <param name="memory">是否通过内存加载证书</param>
         /// <returns></returns>
-        protected virtual bool Initialize()
+        protected virtual bool Initialize(bool memory = false)
         {
             lock (SSLInitLock)
             {
@@ -102,11 +103,13 @@ namespace HPSocketCS
 
                     PemCertFile = string.IsNullOrWhiteSpace(PemCertFile) ? null : PemCertFile;
                     PemKeyFile = string.IsNullOrWhiteSpace(PemKeyFile) ? null : PemKeyFile;
-                    KeyPasswod = string.IsNullOrWhiteSpace(KeyPasswod) ? null : KeyPasswod;
+                    KeyPassword = string.IsNullOrWhiteSpace(KeyPassword) ? null : KeyPassword;
                     CAPemCertFileOrPath = string.IsNullOrWhiteSpace(CAPemCertFileOrPath) ? null : CAPemCertFileOrPath;
 
 
-                    var ret = SSLSdk.HP_SSLAgent_SetupSSLContext(pAgent, VerifyMode, PemCertFile, PemKeyFile, KeyPasswod, CAPemCertFileOrPath);
+                    var ret = memory
+                            ? SSLSdk.HP_SSLAgent_SetupSSLContextByMemory(pAgent, VerifyMode, PemCertFile, PemKeyFile, KeyPassword, CAPemCertFileOrPath)
+                            : SSLSdk.HP_SSLAgent_SetupSSLContext(pAgent, VerifyMode, PemCertFile, PemKeyFile, KeyPassword, CAPemCertFileOrPath);
                     System.Diagnostics.Trace.WriteLine($"ssl Initialize : {ret}");
                 }
 
@@ -117,13 +120,14 @@ namespace HPSocketCS
         /// <summary>
         /// 反初始化SSL环境
         /// </summary>
-        protected virtual void Uninitialize()
+        protected virtual void UnInitialize()
         {
             if (Interlocked.Decrement(ref ObjectReferer) == 0 && pAgent != IntPtr.Zero)
             {
                 SSLSdk.HP_SSLAgent_CleanupSSLContext(pAgent);
             }
         }
+
 
         /// <summary>
         /// 启动通讯组件
@@ -134,7 +138,7 @@ namespace HPSocketCS
         /// <returns></returns>
         public new bool Start(string address, bool async = false)
         {
-            Uninitialize();
+            UnInitialize();
             bool ret = false;
             if (Initialize())
             {
@@ -189,6 +193,19 @@ namespace HPSocketCS
             {
                 SSLSdk.HP_SSLAgent_SetSSLAutoHandShake(pAgent, value);
             }
+        }
+
+        /// <summary>
+        /// 获取指定类型的 SSL Session 信息（输出类型参考：SSLSessionInfo）
+        /// </summary>
+        /// <param name="connId"></param>
+        /// <param name="info">指定获取内容的类型</param>
+        /// <returns></returns>
+        public IntPtr GetSSLSessionInfo(IntPtr connId, SSLSessionInfo info)
+        {
+            var ret = IntPtr.Zero;
+            SSLSdk.HP_SSLAgent_GetSSLSessionInfo(pAgent, connId, info, ref ret);
+            return ret;
         }
     }
 }

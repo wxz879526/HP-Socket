@@ -569,9 +569,9 @@ BOOL CTcpClient::Stop()
 	if(!CheckStoping(dwCurrentThreadID))
 		return FALSE;
 
-	SetConnected(FALSE);
-
 	WaitForWorkerThreadEnd(dwCurrentThreadID);
+
+	SetConnected(FALSE);
 
 	if(m_ccContext.bFireOnClose)
 		FireClose(m_ccContext.enOperation, m_ccContext.iErrorCode);
@@ -757,7 +757,6 @@ BOOL CTcpClient::GetRemoteHost(TCHAR lpszHost[], int& iHostLen, USHORT& usPort)
 
 	return isOK;
 }
-
 
 BOOL CTcpClient::GetRemoteHost(LPCSTR* lpszHost, USHORT* pusPort)
 {

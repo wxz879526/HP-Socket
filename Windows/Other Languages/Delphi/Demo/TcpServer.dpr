@@ -3,9 +3,9 @@ program TcpServer;
 uses
   Vcl.Forms,
   uTcpServer in 'uTcpServer.pas' {F_TcpServer},
-  HPSocketSDK_SSLUnit in 'sdk\HPSocketSDK_SSLUnit.pas',
-  HPSocketSDKUnit in 'sdk\HPSocketSDKUnit.pas',
-  HPTypeDef in 'sdk\HPTypeDef.pas';
+  HPSocketSDK_SSLUnit in '..\Lib\HPSocketSDK_SSLUnit.pas',
+  HPSocketSDKUnit in '..\Lib\HPSocketSDKUnit.pas',
+  HPTypeDef in '..\Lib\HPTypeDef.pas';
 
 {$R *.res}
 

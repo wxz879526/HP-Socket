@@ -278,7 +278,7 @@ namespace SSLPackClientNS
             if (client != null)
             {
                 // 反初始化ssl环境
-                client.Uninitialize();
+                client.UnInitialize();
 
                 client.Destroy();
 

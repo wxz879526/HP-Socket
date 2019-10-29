@@ -26,7 +26,7 @@
 typedef DWORD							TID, THR_ID, NTHR_ID, PID, PRO_ID;
 
 /* 最大工作线程数 */
-#define MAX_WORKER_THREAD_COUNT			500
+#define MAX_WORKER_THREAD_COUNT			512
 /* 默认对象缓存对象锁定时间 */
 #define DEFAULT_OBJECT_CACHE_LOCK_TIME	(20 * 1000)
 /* 默认对象缓存池大小 */

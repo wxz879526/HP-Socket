@@ -259,7 +259,7 @@ namespace HPSocketCS
 
         /**************************************************************************/
         /***************************** Server 操作方法 *****************************/
-        
+
         /// <summary>
         /// 名称：回复请求
         /// 描述：向客户端回复 HTTP 请求
@@ -275,7 +275,6 @@ namespace HPSocketCS
             int headersLength = headers == null ? 0 : headers.Length;
             return HttpSdk.HP_HttpServer_SendResponse(pServer, connId, (ushort)httpStatusCode, desc, headers, headersLength, body, bodyLength);
         }
-        
 
         /// <summary>
         /// 名称：发送本地文件
@@ -292,6 +291,20 @@ namespace HPSocketCS
             int headersLength = headers == null ? 0 : headers.Length;
             return HttpSdk.HP_HttpServer_SendLocalFile(pServer, connId, fileName, (ushort)httpStatusCode, desc, headers, headersLength);
         }
+
+        /// <summary>
+        /// 向对端发送 Chunked 数据分片
+        /// </summary>
+        /// <param name="connId"></param>
+        /// <param name="data">Chunked 数据分片</param>
+        /// <param name="length">数据分片长度（为 0 表示结束分片）</param>
+        /// <param name="extensions">扩展属性（默认：null）</param>
+        /// <returns></returns>
+        public bool SendChunkData(IntPtr connId, byte[] data, int length, string extensions = null)
+        {
+            return HttpSdk.HP_HttpServer_SendChunkData(pServer, connId, data, length, extensions);
+        }
+
 
         /// <summary>
         /// 名称：释放连接

@@ -2113,6 +2113,20 @@ function HP_HttpServer_SendResponse(pServer: HP_HttpServer; dwConnID: HP_CONNID;
   *			FALSE			-- 失败
   */ }
 function HP_HttpServer_SendLocalFile(pServer: HP_HttpServer; dwConnID: HP_CONNID; lpszFileName: PChar; usStatusCode: USHORT; lpszDesc: PChar; const lpHeaders: HP_THeaderAry; iHeaderCount: Integer): BOOL; stdcall; external HPSocketDLL;
+
+{ /*
+  * 名称：发送 Chunked 数据分片
+  * 描述：向对端发送 Chunked 数据分片
+  *		
+  * 参数：		dwConnID		-- 连接 ID
+  *			pData			-- Chunked 数据分片
+  *			iLength			-- 数据分片长度（为 0 表示结束分片）
+  *			lpszExtensions	-- 扩展属性（默认：nullptr）
+  * 返回值：	TRUE			-- 成功
+  *			FALSE			-- 失败
+  */ }
+ function HP_HttpServer_SendChunkData(pServer: HP_HttpServer; dwConnID: HP_CONNID; const pData: PBYTE; iLength: Integer; lpszExtensions: PChar): BOOL; stdcall; external HPSocketDLL;
+
 { /*
   * 名称：发送 WebSocket 消息
   * 描述：向对端端发送 WebSocket 消息
@@ -2132,8 +2146,7 @@ function HP_HttpServer_SendLocalFile(pServer: HP_HttpServer; dwConnID: HP_CONNID
   * 返回值：	TRUE			-- 成功
   *			FALSE			-- 失败
   */ }
-
-function HP_HttpServer_SendWSMessage(pServer: HP_HttpServer; dwConnID: HP_CONNID; bFinal: BOOL; iReserved: byte; iOperationCode: byte; const lpszMask: array of byte; pData: PBYTE; iLength: Integer; ullBodyLen: LongWord): BOOL; stdcall; external HPSocketDLL;
+function HP_HttpServer_SendWSMessage(pServer: HP_HttpServer; dwConnID: HP_CONNID; bFinal: BOOL; iReserved: byte; iOperationCode: byte; const pData: PBYTE; iLength: Integer; ullBodyLen: LongWord): BOOL; stdcall; external HPSocketDLL;
 
 { //*
   * 名称：释放连接
@@ -2270,6 +2283,19 @@ function HP_HttpAgent_SendRequest(pAgent: HP_HttpAgent; dwConnID: HP_CONNID; lps
   */ }
 function HP_HttpAgent_SendLocalFile(pAgent: HP_HttpAgent; dwConnID: HP_CONNID; lpszFileName: PChar; lpszMethod: PChar; lpszPath: PChar; const lpHeaders: HP_THeaderAry; iHeaderCount: Integer): BOOL; stdcall; external HPSocketDLL;
 
+{ /*
+  * 名称：发送 Chunked 数据分片
+  * 描述：向对端发送 Chunked 数据分片
+  *		
+  * 参数：		dwConnID		-- 连接 ID
+  *			pData			-- Chunked 数据分片
+  *			iLength			-- 数据分片长度（为 0 表示结束分片）
+  *			lpszExtensions	-- 扩展属性（默认：nullptr）
+  * 返回值：	TRUE			-- 成功
+  *			FALSE			-- 失败
+  */ }
+ function HP_HttpAgent_SendChunkData(pAgent: HP_HttpAgent; dwConnID: HP_CONNID; const pData: PBYTE; iLength: Integer; lpszExtensions: PChar): BOOL; stdcall; external HPSocketDLL;
+
 // * 发送 POST 请求 */
 function HP_HttpAgent_SendPost(pAgent: HP_HttpAgent; dwConnID: HP_CONNID; lpszPath: PChar; const lpHeaders: HP_THeaderAry; iHeaderCount: Integer; const pBody: PBYTE; iLength: Integer): BOOL; stdcall; external HPSocketDLL;
 // * 发送 PUT 请求 */
@@ -2316,7 +2342,7 @@ function HP_HttpAgent_SendConnect(pAgent: HP_HttpAgent; dwConnID: HP_CONNID; lps
   *			FALSE			-- 失败
   */ }
 
-function HP_HttpAgent_SendWSMessage(pAgent: HP_HttpAgent; dwConnID: HP_CONNID; bFinal: BOOL; iReserved: byte; iOperationCode: byte; const lpszMask: array of byte; pData: PBYTE; iLength: Integer; ullBodyLen: LongWord): BOOL; stdcall; external HPSocketDLL;
+function HP_HttpAgent_SendWSMessage(pAgent: HP_HttpAgent; dwConnID: HP_CONNID; bFinal: BOOL; iReserved: byte; iOperationCode: byte; const lpszMask: array of byte; const pData: PBYTE; iLength: Integer; ullBodyLen: LongWord): BOOL; stdcall; external HPSocketDLL;
 
 { /*
   * 名称：启动 HTTP 通信
@@ -2433,6 +2459,19 @@ function HP_HttpClient_SendRequest(pClient: HP_HttpClient; lpszMethod: PChar; lp
   */ }
 function HP_HttpClient_SendLocalFile(pClient: HP_HttpClient; lpszFileName: PChar; lpszMethod: PChar; lpszPath: PChar; const lpHeaders: HP_THeaderAry; iHeaderCount: Integer): BOOL; stdcall; external HPSocketDLL;
 
+{ /*
+  * 名称：发送 Chunked 数据分片
+  * 描述：向对端发送 Chunked 数据分片
+  *		
+  * 参数：		dwConnID		-- 连接 ID
+  *			pData			-- Chunked 数据分片
+  *			iLength			-- 数据分片长度（为 0 表示结束分片）
+  *			lpszExtensions	-- 扩展属性（默认：nullptr）
+  * 返回值：	TRUE			-- 成功
+  *			FALSE			-- 失败
+  */ }
+ function HP_HttpClient_SendChunkData(pClient: HP_HttpClient; const pData: PBYTE; iLength: Integer; lpszExtensions: PChar): BOOL; stdcall; external HPSocketDLL;
+
 // * 发送 POST 请求 */
 function HP_HttpClient_SendPost(pClient: HP_HttpClient; lpszPath: PChar; const lpHeaders: HP_THeaderAry; iHeaderCount: Integer; const pBody: PBYTE; iLength: Integer): BOOL; stdcall; external HPSocketDLL;
 // * 发送 PUT 请求 */
@@ -2478,7 +2517,7 @@ function HP_HttpClient_SendConnect(pClient: HP_HttpClient; lpszHost: PChar; cons
   *			FALSE			-- 失败
   */ }
 
-function HP_HttpClient_SendWSMessage(pClient: HP_HttpClient; bFinal: BOOL; iReserved: byte; iOperationCode: byte; const lpszMask: array of byte; pData: PBYTE; iLength: Integer; ullBodyLen: LongWord): BOOL; stdcall; external HPSocketDLL;
+function HP_HttpClient_SendWSMessage(pClient: HP_HttpClient; bFinal: BOOL; iReserved: byte; iOperationCode: byte; const lpszMask: array of byte; const pData: PBYTE; iLength: Integer; ullBodyLen: LongWord): BOOL; stdcall; external HPSocketDLL;
 
 { /*
   * 名称：启动 HTTP 通信

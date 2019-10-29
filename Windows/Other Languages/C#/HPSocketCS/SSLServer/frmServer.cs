@@ -43,7 +43,7 @@ namespace SSLServerNS
                 server.CAPemCertFileOrPath = "ssl-cert\\ca.crt";
                 server.PemCertFile = "ssl-cert\\server.cer";
                 server.PemKeyFile = "ssl-cert\\server.key";
-                server.KeyPasswod = "123456";
+                server.KeyPassword = "123456";
 
                 // 初始化ssl环境
                 // 初始化ssl环境
@@ -317,7 +317,7 @@ namespace SSLServerNS
             if (server != null)
             {
                 // 反初始化ssl环境
-                server.Uninitialize();
+                server.UnInitialize();
 
                 server.Destroy();
             }

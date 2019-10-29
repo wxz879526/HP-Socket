@@ -145,7 +145,7 @@ namespace HPSocketCS
             _OnReceive = new Sdk.OnReceive(SDK_OnReceive);
             _OnClose = new Sdk.OnClose(SDK_OnClose);
             _OnHandShake = new Sdk.OnHandShake(SDK_OnHandShake);
-             
+
 
             // 设置 Socket 监听器回调函数
             HttpSdk.HP_Set_FN_HttpClient_OnPrepareConnect(pListener, _OnPrepareConnect);
@@ -332,11 +332,11 @@ namespace HPSocketCS
         /// <summary>
         /// 发送请求
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="method">请求方法</param>
         /// <param name="path">请求路径</param>
         /// <param name="headers">请求头</param>
         /// <param name="body">请求体</param>
+        /// <param name="bodyLength">请求体长度</param>
         /// <returns></returns>
         public bool SendRequest(HttpMethod method, string path, THeader[] headers, byte[] body, int bodyLength)
         {
@@ -348,7 +348,6 @@ namespace HPSocketCS
         /// 名称：发送本地文件
         /// 描述：向指定连接发送 4096 KB 以下的小文件
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="fileName"></param>
         /// <param name="method"></param>
         /// <param name="path"></param>
@@ -361,9 +360,20 @@ namespace HPSocketCS
         }
 
         /// <summary>
+        /// 向对端发送 Chunked 数据分片
+        /// </summary>
+        /// <param name="data">Chunked 数据分片</param>
+        /// <param name="length">数据分片长度（为 0 表示结束分片）</param>
+        /// <param name="extensions">扩展属性（默认：null）</param>
+        /// <returns></returns>
+        public bool SendChunkData(byte[] data, int length, string extensions = null)
+        {
+            return HttpSdk.HP_HttpClient_SendChunkData(pClient, data, length, extensions);
+        }
+
+        /// <summary>
         /// 发送 POST 请求
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="path"></param>
         /// <param name="headers"></param>
         /// <param name="body"></param>
@@ -378,7 +388,6 @@ namespace HPSocketCS
         /// <summary>
         /// 发送 PUT 请求
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="path"></param>
         /// <param name="headers"></param>
         /// <param name="body"></param>
@@ -393,7 +402,6 @@ namespace HPSocketCS
         /// <summary>
         /// 发送 PATCH 请求
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="path"></param>
         /// <param name="headers"></param>
         /// <param name="body"></param>
@@ -408,7 +416,6 @@ namespace HPSocketCS
         /// <summary>
         /// 发送 GET 请求
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="path"></param>
         /// <param name="headers"></param>
         /// <returns></returns>
@@ -421,7 +428,6 @@ namespace HPSocketCS
         /// <summary>
         /// 发送 DELETE 请求
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="path"></param>
         /// <param name="headers"></param>
         /// <returns></returns>
@@ -434,7 +440,6 @@ namespace HPSocketCS
         /// <summary>
         /// 发送 HEAD 请求
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="path"></param>
         /// <param name="headers"></param>
         /// <returns></returns>
@@ -447,7 +452,6 @@ namespace HPSocketCS
         /// <summary>
         /// 发送 TRACE 请求
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="path"></param>
         /// <param name="headers"></param>
         /// <returns></returns>
@@ -459,17 +463,16 @@ namespace HPSocketCS
         /// <summary>
         /// 发送 WSMessage 请求
         /// </summary>
-        /// <param name="dwConnID"></param>
         /// <param name="bFinal"></param>
         /// <param name="iReserved"></param>
         /// <param name="iOperationCode"></param>
         /// <param name="lpszMask"></param>
-        /// <param name="Data"></param>
+        /// <param name="data"></param>
         /// <param name="ullBodyLen"></param>
         /// <returns></returns>
-        public bool SendWSMessage( bool bFinal, byte iReserved, byte iOperationCode, byte[] lpszMask, byte[] pData, ulong ullBodyLen)
+        public bool SendWSMessage(bool bFinal, byte iReserved, byte iOperationCode, byte[] lpszMask, byte[] data, ulong ullBodyLen)
         {
-            return HttpSdk.HP_HttpClient_SendWSMessage(pClient, bFinal, iReserved, iOperationCode, lpszMask, pData, pData.Length, ullBodyLen);
+            return HttpSdk.HP_HttpClient_SendWSMessage(pClient, bFinal, iReserved, iOperationCode, lpszMask, data, data.Length, ullBodyLen);
         }
 
 
@@ -477,7 +480,6 @@ namespace HPSocketCS
         /// <summary>
         /// 发送 OPTIONS 请求
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="path"></param>
         /// <param name="headers"></param>
         /// <returns></returns>
@@ -490,7 +492,6 @@ namespace HPSocketCS
         /// <summary>
         /// 发送 CONNECT 请求
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="path"></param>
         /// <param name="headers"></param>
         /// <returns></returns>
@@ -503,7 +504,6 @@ namespace HPSocketCS
         /// <summary>
         /// 启动 HTTP 通信, 当通信组件设置为非自动启动 HTTP 通信时，需要调用本方法启动 HTTP 通信
         /// </summary>
-        /// <param name="connId"></param>
         /// <returns></returns>
         public bool StartHttp()
         {
@@ -663,7 +663,6 @@ namespace HPSocketCS
         /// <summary>
         /// 获取某个请求头（单值）
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="key"></param>
         /// <returns></returns>
         public string GetHeader(string key)
@@ -679,7 +678,6 @@ namespace HPSocketCS
         /// <summary>
         /// 获取某个请求头（多值）
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="key"></param>
         /// <returns></returns>
         public List<string> GetHeaders(string key)
@@ -780,7 +778,6 @@ namespace HPSocketCS
         /// <summary>
         /// 获取Cookie
         /// </summary>
-        /// <param name="connId"></param>
         /// <param name="key"></param>
         /// <returns></returns>
         public string GetCookie(string key)
@@ -797,8 +794,6 @@ namespace HPSocketCS
         /// 获取所有 Cookie
         /// </summary>
         /// <param name="connId"></param>
-        /// <param name="lpCookies"></param>
-        /// <param name="pdwCount"></param>
         /// <returns></returns>
         public List<TCookie> GetAllCookies(IntPtr connId)
         {

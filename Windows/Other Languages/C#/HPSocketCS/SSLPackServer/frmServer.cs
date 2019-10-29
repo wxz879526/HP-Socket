@@ -318,7 +318,7 @@ namespace SSLPackServerNS
             if (server != null)
             {
                 // 反初始化ssl环境
-                server.Uninitialize();
+                server.UnInitialize();
 
                 server.Destroy();
             }

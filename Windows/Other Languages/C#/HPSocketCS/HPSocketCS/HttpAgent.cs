@@ -192,7 +192,8 @@ namespace HPSocketCS
         //包解析完成事件
         private HandleResult SDK_OnWSMessageHeader(IntPtr pSender, IntPtr connId, bool bFinal, byte iReserved, byte iOperationCode, byte[] lpszMask, ulong ullBodyLen)
         {
-            if (OnWSMessageHeader != null) {
+            if (OnWSMessageHeader != null)
+            {
                 OnWSMessageHeader(connId, bFinal, iReserved, iOperationCode, lpszMask, ullBodyLen);
             }
             return HandleResult.Ok;
@@ -201,7 +202,8 @@ namespace HPSocketCS
         //头解析完成事件
         private HandleResult SDK_OnWSMessageComplete(IntPtr pSender, IntPtr connId)
         {
-            if (OnWSMessageComplete != null){
+            if (OnWSMessageComplete != null)
+            {
                 return OnWSMessageComplete(connId);
             }
             return HandleResult.Ok;
@@ -215,7 +217,7 @@ namespace HPSocketCS
                 Marshal.Copy(pData, bytes, 0, iLength);
                 return OnWSMessageBody(connId, bytes);
             }
-            else if(OnPointerWSMessageBody!=null)
+            else if (OnPointerWSMessageBody != null)
             {
                 return OnPointerWSMessageBody(connId, pData, iLength);
 
@@ -355,6 +357,21 @@ namespace HPSocketCS
             return HttpSdk.HP_HttpAgent_SendLocalFile(pAgent, connId, fileName, method.ToString(), path, headers, headersLength);
         }
 
+
+        /// <summary>
+        /// 向对端发送 Chunked 数据分片
+        /// </summary>
+        /// <param name="connId"></param>
+        /// <param name="data">Chunked 数据分片</param>
+        /// <param name="length">数据分片长度（为 0 表示结束分片）</param>
+        /// <param name="extensions">扩展属性（默认：null）</param>
+        /// <returns></returns>
+        public bool SendChunkData(IntPtr connId, byte[] data, int length, string extensions = null)
+        {
+            return HttpSdk.HP_HttpAgent_SendChunkData(pAgent, connId, data, length, extensions);
+        }
+
+
         /// <summary>
         /// 发送 POST 请求
         /// </summary>
@@ -475,7 +492,8 @@ namespace HPSocketCS
         /// <param name="Data"></param>
         /// <param name="ullBodyLen"></param>
         /// <returns></returns>
-        public bool SendWSMessage(IntPtr dwConnID, bool bFinal, byte iReserved, byte iOperationCode, byte[] lpszMask,  byte[] pData, ulong ullBodyLen) {
+        public bool SendWSMessage(IntPtr dwConnID, bool bFinal, byte iReserved, byte iOperationCode, byte[] lpszMask, byte[] pData, ulong ullBodyLen)
+        {
             return HttpSdk.HP_HttpAgent_SendWSMessage(pAgent, dwConnID, bFinal, iReserved, iOperationCode, lpszMask, pData, pData.Length, ullBodyLen);
         }
 
@@ -500,7 +518,7 @@ namespace HPSocketCS
         {
             return HttpSdk.HP_HttpAgent_StartHttp(pAgent, connId);
         }
-        
+
         /******************************************************************************/
         /***************************** Agent 属性访问方法 ******************************/
 

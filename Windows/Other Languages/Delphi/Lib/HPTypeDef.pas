@@ -254,7 +254,7 @@ type
 		负数	 -- 失败，中断 SSL 握手
 
 ************************************************************************/}
-  Fn_SNI_ServerNameCallback  =function(lpszServerName: PChar): Integer;  stdcall;
+  Fn_SNI_ServerNameCallback  =function(lpszServerName: PChar; pContext: PVOID): Integer;  stdcall;
   HP_Fn_SNI_ServerNameCallback = Fn_SNI_ServerNameCallback;
 
 
@@ -384,6 +384,31 @@ type
   );
 
 {/************************************************************************
+名称：SSL Session 信息类型
+描述：用于 GetSSLSessionInfo()，标识输出的 Session 信息类型
+************************************************************************/}
+  En_HP_SSLSessionInfo = (
+    SSL_SSI_MIN				           	= 0,	       //
+    SSL_SSI_CTX				          	= 0,	       // SSL CTX				            （输出类型：SSL_CTX*）
+    SSL_SSI_CTX_METHOD			      = 1,	       // SSL CTX Mehtod		        （输出类型：SSL_METHOD*）
+    SSL_SSI_CTX_CIPHERS			      = 2,	       // SSL CTX Ciphers		        （输出类型：STACK_OF(SSL_CIPHER)*）
+    SSL_SSI_CTX_CERT_STORE		    = 3,         // SSL CTX Cert Store	      （输出类型：X509_STORE*）
+    SSL_SSI_SERVER_NAME_TYPE	    = 4,         // Server Name Type		      （输出类型：int）
+    SSL_SSI_SERVER_NAME		      	= 5,	       // Server Name			          （输出类型：LPCSTR）
+    SSL_SSI_VERSION				        = 6,	       // SSL Version			          （输出类型：LPCSTR）
+    SSL_SSI_METHOD				        = 7,	       // SSL Method			          （输出类型：SSL_METHOD*）
+    SSL_SSI_CERT				          = 8,	       // SSL Cert				          （输出类型：X509*）
+    SSL_SSI_PKEY				          = 9,	       // SSL Private Key		        （输出类型：EVP_PKEY*）
+    SSL_SSI_CURRENT_CIPHER		    = 10,	       // SSL Current Cipher	      （输出类型：SSL_CIPHER*）
+    SSL_SSI_CIPHERS				        = 11,	       // SSL Available Ciphers     （输出类型：STACK_OF(SSL_CIPHER)*）
+    SSL_SSI_CLIENT_CIPHERS		    = 12,	       // SSL Client Ciphers	      （输出类型：STACK_OF(SSL_CIPHER)*）
+    SSL_SSI_PEER_CERT			        = 13,	       // SSL Peer Cert		          （输出类型：X509*）
+    SSL_SSI_PEER_CERT_CHAIN		    = 14,	       // SSL Peer Cert Chain	      （输出类型：STACK_OF(X509)*）
+    SSL_SSI_VERIFIED_CHAIN		    = 15,	       // SSL Verified Chain	      （输出类型：STACK_OF(X509)*）
+    SSL_SSI_MAX					          = 15	       //
+  );
+
+{/************************************************************************
 名称：Name/Value 结构体
 描述：字符串名值对结构体
 ************************************************************************/}
@@ -421,6 +446,8 @@ type
 
 
   HP_TCookieAry= array of HP_TCookie;
+
+  PLPVOID = ^LPVOID;
 
 {/************************************************************************
 名称：获取 HPSocket 版本号

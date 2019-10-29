@@ -6,6 +6,67 @@
 3、英文模块框架更新，增强稳定性，如果要适配到中文模块，相当于重写了。
 4、小卓的中文支持库已经很稳定了，可以完全代替中文模块(中文模块因为框架更新已经出现了很多BUG)。
 
+
+[09:40 2019/09/20]
+
+1、所有 HTTP 组件添加 SendChunkData() 方法以方便地发送 Chunked 数据。
+
+
+
+
+[11:12 2019/09/02]
+
+> SSL 组件更新：
+-----------------
+1、所有 SSL 组件增加以下接口方法支持加载内存证书
+	1) Server：SetupSSLContextByMemory(), AddSSLContextByMemory()
+	2) Agent：SetupSSLContextByMemory()
+	3) Client：SetupSSLContextByMemory()
+2、所有 SSL 组件增加 GetSSLSessionInfo() 方法，用来获取 SSL 会话相关信息
+3、SSL Server 组件提供默认的 SNI 服务器域名绑定机制，大多数情形下应用程序不必自定义 SNI 回调函数
+	1) 当 SetupSSLContext() 的 'fnServerNameCallback' 参数值为 nullptr 则启用默认的服务器域名绑定机制
+	2) BindSSLServerName()：绑定服务器域名到指定证书
+	3) HP_SSL_DefaultServerNameCallback()：默认 SNI 回调函数
+
+> HTTP 组件更新：
+-----------------
+1、HTTP Server 组件的 SendWSMessage() 方法删除 lpszMask 参数
+2、所有 HTTP 组件的 SendWSMessage() 方法的 pData 参数类型改为 const BYTE*，因此可以传入常量
+
+> UDP 组件更新：
+-----------------
+1、优化 Linux 平台的 UDP Cast 组件，使得其与 Windows 平台的 UDP Cast 组件保持行为一致
+2、提升所有 UDP 组件（Server/Client/Cast）的 IPv6 兼容性
+
+> 其他更新：
+-----------------
+1、jemalloc 升级到 5.2.1 版本
+2、代码优化，提高稳定性
+
+> 升级说明：
+-----------------
+1、HP-Socket v5.6.1 基本兼容 HP-Socket v5.5.3 版本（HTTP 组件的 SendWSMessage() 方法除外）
+
+
+
+
+
+[15:12 2019/08/01]
+一、更新为HPSocket 5.5.3 版本，完全兼容5.X.X版本
+
+二、修复模块部分接口注释
+
+[13:4 2019/04/22]
+一、UDP 组件更新
+	增加可靠 UDP 组件：IUdpArqServer、IUdpArqClient
+	可靠 UDP 组件详细说明请参考开发文档 《HP-Socket Development Guide》
+	优化 IUdpServer 组件，修复潜在缺陷
+	
+二、模块部分代码优化
+
+三、更新为HPSocket 5.5.1 rc2版本，完全兼容5.4.4版本
+
+
 [23:40 2019/03/14]
 一、新增Arq组件，arq组件为可靠连接的udp，具体介绍请百度arq
 	1、UdpArqServer组件

@@ -3,9 +3,9 @@ program TcpPackServer;
 uses
   Vcl.Forms,
   uTcpPackServer in 'uTcpPackServer.pas' {F_TcpPackServer},
-  HPSocketSDK_SSLUnit in 'sdk\HPSocketSDK_SSLUnit.pas',
-  HPSocketSDKUnit in 'sdk\HPSocketSDKUnit.pas',
-  HPTypeDef in 'sdk\HPTypeDef.pas';
+  HPSocketSDK_SSLUnit in '..\Lib\HPSocketSDK_SSLUnit.pas',
+  HPSocketSDKUnit in '..\Lib\HPSocketSDKUnit.pas',
+  HPTypeDef in '..\Lib\HPTypeDef.pas';
 
 {$R *.res}
 
