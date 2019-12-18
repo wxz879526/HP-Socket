@@ -43,7 +43,7 @@ void __EXIT_FN_(void (*fn)(int), LPCSTR lpszFnName, int* lpiExitCode, int iErrno
 	}
 
 	if(lpszFile && iLine > 0)
-		FPRINTLN(stderr, "%s : %s\n    -> %s (%d) : %s", lpszTitle, strerror(iErrno), lpszFile, iLine, lpszFunc ? lpszFunc : "");
+		FPRINTLN(stderr, "%s : %s\n  => %s (%d) : %s", lpszTitle, strerror(iErrno), lpszFile, iLine, lpszFunc ? lpszFunc : "");
 	else
 		FPRINTLN(stderr, "%s : %s", lpszTitle, strerror(iErrno));
 
